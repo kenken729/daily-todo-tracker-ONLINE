@@ -105,8 +105,7 @@ export default function DailyWorkReminderApp() {
           text += `- ${task.content}｜⏰ ${label}：${format(dueDate, "yyyy-MM-dd")}`;
           if (isTodayDue) text += todayText;
           else if (isOverdue) text += overdueText;
-          text += "
-";
+          text += "\\n";
         });
       }
     });
