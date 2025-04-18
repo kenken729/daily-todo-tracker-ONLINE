@@ -88,10 +88,6 @@ const handleAddTask = async () => {
     }));
   };
 
-  // 其餘內容略，保留原樣（例如 render 區域、generateTextOutput 等）...
-}
-
-
   const toggleComplete = async (id) => {
     const task = tasks.find((t) => t.id === id);
     const updated = { ...task, completed: !task.completed };
