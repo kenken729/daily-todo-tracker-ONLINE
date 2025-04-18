@@ -32,43 +32,52 @@ export default function DailyWorkReminderApp() {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
 
-  const handleAddTask = async () => {
-    if (!newTask.content || newTask.owners.length === 0) {
-      alert("請輸入代辦項目與負責人");
-      return;
-    }
+const handleAddTask = async () => {
+  if (!newTask.content) {
+    alert("請輸入代辦項目內容");
+    return;
+  }
+  if (newTask.owners.length === 0) {
+    alert("請選擇至少一位負責人");
+    return;
+  }
 
-    const resolveOwners = () => {
-      let resolved = [];
-      newTask.owners.forEach((o) => {
-        if (o === "所有人") resolved.push(...people);
-        else if (o === "國內") resolved.push("佳平", "潘霆", "彥銘", "姿穎", "育全", "鈺庭");
-        else if (o === "海外") resolved.push("佳宇", "琪珊", "雄欽", "達那", "韋燕");
-        else resolved.push(o);
-      });
-      return [...new Set(resolved)];
-    };
-
-    const owners = resolveOwners();
-    const dueDate = newTask.due || new Date().toISOString().split("T")[0];
-    const contentParts = newTask.content.split("、").map(part => part.trim()).filter(Boolean);
-
-    const entries = owners.flatMap((owner) =>
-      contentParts.map((part) => ({
-        content: part,
-        due: dueDate,
-        owners: [owner],
-        createdAt: new Date().toISOString(),
-        completed: false
-      }))
-    );
-
-    const { error } = await supabase.from("tasks").insert(entries);
-    if (!error) {
-      setTasks([...tasks, ...entries]);
-      setNewTask({ content: "", due: "", owners: [] });
-    }
+  const resolveOwners = () => {
+    let resolved = [];
+    newTask.owners.forEach((o) => {
+      if (o === "所有人") resolved.push(...people);
+      else if (o === "國內") resolved.push("佳平", "潘霆", "彥銘", "姿穎", "育全", "鈺庭");
+      else if (o === "海外") resolved.push("佳宇", "琪珊", "雄欽", "達那", "韋燕");
+      else resolved.push(o);
+    });
+    return [...new Set(resolved)];
   };
+
+  const owners = resolveOwners();
+  const dueDate = newTask.due || new Date().toISOString().split("T")[0];
+  const contentParts = newTask.content.split("、").map(part => part.trim()).filter(Boolean);
+
+  const entries = owners.flatMap((owner) =>
+    contentParts.map((part) => ({
+      content: part,
+      due: dueDate,
+      owners: [owner],
+      createdAt: new Date().toISOString(),
+      completed: false
+    }))
+  );
+
+  const { data, error } = await supabase.from("tasks").insert(entries);
+
+  if (error) {
+    console.error("新增任務失敗", error);
+    alert("儲存到雲端失敗，請稍後再試");
+  } else {
+    const { data: refreshedTasks } = await supabase.from("tasks").select("*");
+    setTasks(refreshedTasks || []);
+    setNewTask({ content: "", due: "", owners: [] });
+  }
+};
 
   const toggleOwner = (owner) => {
     setNewTask((prev) => ({
