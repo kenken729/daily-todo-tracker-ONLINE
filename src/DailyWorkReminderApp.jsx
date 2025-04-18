@@ -20,7 +20,7 @@ export default function DailyWorkReminderApp() {
 
   useEffect(() => {
     const fetchTasks = async () => {
-      const { data, error } = await supabase.from("tasks").select("*");
+      const { data, error } = await supabase.from("DailyWorkReminder").select("*");
       if (!error && data) {
         setTasks(data);
       }
@@ -67,17 +67,17 @@ const handleAddTask = async () => {
     }))
   );
 
-  const { data, error } = await supabase.from("tasks").insert(entries);
+    const { data, error } = await supabase.from("DailyWorkReminder").insert(entries);
 
-  if (error) {
-    console.error("新增任務失敗", error);
-    alert("儲存到雲端失敗，請稍後再試");
-  } else {
-    const { data: refreshedTasks } = await supabase.from("tasks").select("*");
-    setTasks(refreshedTasks || []);
-    setNewTask({ content: "", due: "", owners: [] });
-  }
-};
+    if (error) {
+      console.error("新增任務失敗", error);
+      alert("儲存到雲端失敗，請稍後再試");
+    } else {
+      const { data: refreshedTasks } = await supabase.from("DailyWorkReminder").select("*");
+      setTasks(refreshedTasks || []);
+      setNewTask({ content: "", due: "", owners: [] });
+    }
+  };
 
   const toggleOwner = (owner) => {
     setNewTask((prev) => ({
@@ -88,15 +88,19 @@ const handleAddTask = async () => {
     }));
   };
 
+  // 其餘內容略，保留原樣（例如 render 區域、generateTextOutput 等）...
+}
+
+
   const toggleComplete = async (id) => {
     const task = tasks.find((t) => t.id === id);
     const updated = { ...task, completed: !task.completed };
-    await supabase.from("tasks").update({ completed: updated.completed }).eq("id", id);
+    await supabase.from("DailyWorkReminder").update({ completed: updated.completed }).eq("id", id);
     setTasks(tasks.map((t) => (t.id === id ? updated : t)));
   };
 
   const removeTask = async (id) => {
-    await supabase.from("tasks").delete().eq("id", id);
+    await supabase.from("DailyWorkReminder").delete().eq("id", id);
     setTasks(tasks.filter((t) => t.id !== id));
   };
 
