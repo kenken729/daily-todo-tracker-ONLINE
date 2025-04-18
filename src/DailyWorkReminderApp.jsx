@@ -61,7 +61,7 @@ const handleAddTask = async () => {
     contentParts.map((part) => ({
       content: part,
       due: dueDate,
-      owners: [owner],
+      owners: [`${owner}`], // 然後 Supabase 的欄位型態必須是 text[]
       createdAt: new Date().toISOString(),
       completed: false
     }))
