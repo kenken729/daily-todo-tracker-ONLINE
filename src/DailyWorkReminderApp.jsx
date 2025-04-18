@@ -57,15 +57,15 @@ const handleAddTask = async () => {
   const dueDate = newTask.due || new Date().toISOString().split("T")[0];
   const contentParts = newTask.content.split("、").map(part => part.trim()).filter(Boolean);
 
-  const entries = owners.flatMap((owner) =>
-    contentParts.map((part) => ({
-      content: part,
-      due: dueDate,
-      owners: [owner], // 然後 Supabase 的欄位型態必須是 text[]
-      createdAt: new Date().toISOString(),
-      completed: false
-    }))
-  );
+const entries = owners.flatMap((owner) =>
+  contentParts.map((part) => ({
+    content: part,
+    due: dueDate,
+    owners: [`${owner}`], // ← Supabase JS SDK 應自動處理為 text[]，但為穩妥請加上這行：
+    created_at: new Date().toISOString(), // 注意你的表格欄位是 created_at 不是 createdAt
+    completed: false
+  }))
+);
 
     const { data, error } = await supabase.from("DailyWorkReminder").insert(entries, { returning: "minimal" });
 
