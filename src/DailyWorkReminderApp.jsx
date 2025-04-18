@@ -21,6 +21,7 @@ export default function DailyWorkReminderApp() {
   useEffect(() => {
     const fetchTasks = async () => {
       const { data, error } = await supabase.from("DailyWorkReminder").select("*");
+      .insert(entries, { returning: "minimal" });
       if (!error && data) {
         setTasks(data);
       }
