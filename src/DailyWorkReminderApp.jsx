@@ -115,7 +115,7 @@ const entries = owners.flatMap((owner) =>
     let text = "";
     people.forEach((person) => {
       const personTasks = tasks
-        .filter((task) => task.owners.includes(person) && !task.completed)
+        .filter((task) => (task.owners || []).includes(person) && !task.completed)
         .sort((a, b) => new Date(a.due) - new Date(b.due));
 
       if (personTasks.length > 0) {
