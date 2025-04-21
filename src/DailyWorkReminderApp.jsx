@@ -220,7 +220,7 @@ const entries = owners.flatMap((owner) =>
 
           {people.map((person) => {
             const list = sortedPendingTasks.filter((t) =>
-  Array.isArray(t.owners) && t.owners.includes(person);
+  Array.isArray(t.owners) && t.owners.includes(person)
 );
             return (
               <div key={person} style={{ marginBottom: "1.5rem" }}>
