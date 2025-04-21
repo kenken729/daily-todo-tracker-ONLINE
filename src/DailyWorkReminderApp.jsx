@@ -18,15 +18,20 @@ export default function DailyWorkReminderApp() {
   const [newTask, setNewTask] = useState({ content: "", due: "", owners: [] });
   const [showTextOutput, setShowTextOutput] = useState(false);
 
-  useEffect(() => {
-    const fetchTasks = async () => {
-      const { data, error } = await supabase.from("DailyWorkReminder").select("*");
-      if (!error && data) {
-        setTasks(data);
-      }
-    };
-    fetchTasks();
-  }, []);
+useEffect(() => {
+  const fetchTasks = async () => {
+    const { data, error } = await supabase.from("DailyWorkReminder").select("*");
+    if (!error && data) {
+      // ✅ 強制保證每筆任務的 owners 欄位是陣列
+      const safeData = data.map((task) => ({
+        ...task,
+        owners: Array.isArray(task.owners) ? task.owners : []
+      }));
+      setTasks(safeData);
+    }
+  };
+  fetchTasks();
+}, []);
 
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
@@ -215,7 +220,7 @@ const entries = owners.flatMap((owner) =>
 
           {people.map((person) => {
             const list = sortedPendingTasks.filter((t) =>
-  Array.isArray(t.owners) && (t.owners || []).includes(person));
+  Array.isArray(t.owners) && t.owners.includes(person);
 );
             return (
               <div key={person} style={{ marginBottom: "1.5rem" }}>
