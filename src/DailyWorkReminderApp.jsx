@@ -55,7 +55,7 @@ const handleAddTask = async () => {
 
   const owners = resolveOwners();
   const dueDate = newTask.due || new Date().toISOString().split("T")[0];
-  const contentParts = newTask.content.split("、").map(part => part.trim()).filter(Boolean);
+  const contentParts = (newTask.content || "").split("、").map(part => part.trim()).filter(Boolean);
 
 const entries = owners.flatMap((owner) =>
   contentParts.map((part) => ({
