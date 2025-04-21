@@ -139,7 +139,7 @@ const entries = owners.flatMap((owner) =>
     });
     return text.trim();
   };
-
+  const tasksSafe = Array.isArray(tasks) ? tasks : [];
   const sortedPendingTasks = tasks.filter((t) => !t.completed).sort((a, b) => new Date(a.due) - new Date(b.due));
   const sortedCompletedTasks = tasks.filter((t) => t.completed).sort((a, b) => new Date(b.due) - new Date(a.due));
 
@@ -214,7 +214,9 @@ const entries = owners.flatMap((owner) =>
           )}
 
           {people.map((person) => {
-            const list = sortedPendingTasks.filter((t) => t.owners.includes(person));
+            const list = sortedPendingTasks.filter((t) =>
+  Array.isArray(t.owners) && t.owners.includes(person)
+);
             return (
               <div key={person} style={{ marginBottom: "1.5rem" }}>
                 <h2 style={{ fontSize: "1.2rem", marginBottom: "0.5rem" }}>👤 {person}</h2>
