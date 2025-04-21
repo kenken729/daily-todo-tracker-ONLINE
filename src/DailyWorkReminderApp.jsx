@@ -173,7 +173,7 @@ const entries = owners.flatMap((owner) =>
                     <label key={p}>
                       <input
                         type="checkbox"
-                        checked={newTask.owners.includes(p)}
+                        checked={(newTask.owners || []).includes(p)}
                         onChange={() => toggleOwner(p)}
                       /> {p}
                     </label>
@@ -184,7 +184,7 @@ const entries = owners.flatMap((owner) =>
                     <label key={p}>
                       <input
                         type="checkbox"
-                        checked={newTask.owners.includes(p)}
+                        checked={(newTask.owners || []).includes(p)}
                         onChange={() => toggleOwner(p)}
                       /> {p}
                     </label>
@@ -195,7 +195,7 @@ const entries = owners.flatMap((owner) =>
                     <label key={p}>
                       <input
                         type="checkbox"
-                        checked={newTask.owners.includes(p)}
+                        checked={(newTask.owners || []).includes(p)}
                         onChange={() => toggleOwner(p)}
                       /> {p}
                     </label>
